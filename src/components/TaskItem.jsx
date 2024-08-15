@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 const TaskItem = ({task, index, handleDelete, handleEdit}) => {
     const [showEdit, setShowEdit] = useState(false);
     const [newTask, setNewTask] = useState(task);
     const [isAlive, setIsAlive] = useState(true);
+    const inputRef = useRef();
+    useEffect(()=>{
+        if(showEdit && inputRef.current){
+            inputRef.current.focus();
+        }
+    })
     const variants = {
         open: {opacity: 1, y:0},
         closed: {opactity: 0, x:'-100%'}
@@ -30,7 +36,7 @@ const TaskItem = ({task, index, handleDelete, handleEdit}) => {
     </div>
         {
             showEdit && <form onSubmit={handleUpdate} className="flex justify-between">
-                <input type="text" className="border-2 border-primary bg-base-300 rounded-md w-3/5 px-2" value={newTask.task} onChange={(e)=>setNewTask(e.target.value)}/>
+                <input type="text" className="border-2 border-primary bg-base-300 rounded-md w-3/5 px-2" ref={inputRef} value={newTask.task} onChange={(e)=>setNewTask(e.target.value)}/>
                 <button type="submit" className="px-2 rounded-md bg-base-content text-accent font-bold">Submit</button>
             </form>
         }
