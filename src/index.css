@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes enter-anim {
+    0% {
+        margin-left: -100%;
+    }
+    100% {
+        margin-left: 0;
+    }
+}
+@keyframes exit-anim {
+    0% {
+        margin-left: 0;
+    }
+    100% {
+        margin-left: 100%;
+    }
+}
+
+.enter{
+    animation: enter-anim 1s ease forwards;
+}
