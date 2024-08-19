@@ -21,7 +21,7 @@ const TaskItem = ({ task, index, handleEdit, handleDelete, tasksListLength }) =>
       transition={{ duration: 0.3 }}
     >
       <div className="flex justify-between">
-        <p className="max-w-48 break-words">
+        <p className="w-48 sm:w-72 md:w-3/4 break-words">
           <span className="text-primary">{`${index + 1 + ") "}`}</span>
           {task.task}
         </p>
