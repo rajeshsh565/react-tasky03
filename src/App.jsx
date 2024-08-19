@@ -1,51 +1,55 @@
-import { useEffect, useRef, useState } from "react"
-import TaskItem from "./components/TaskItem";
 import { AnimatePresence } from "framer-motion";
-import {v4 as uuid } from 'uuid';
+import { useEffect, useRef, useState } from "react";
+import {v4 as uuid} from "uuid";
+import TaskItem from "./components/TaskItem";
 
 const App = () => {
-  const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
+  const [task, setTask] = useState('');
   const [isNewTask, setIsNewTask] = useState();
-  const taskListRef = useRef();
+  const tasksListRef = useRef();
+
   useEffect(()=>{
-    if(isNewTask==true)
-    taskListRef.current.scrollTop = taskListRef.current.scrollHeight;
-  },[tasks])
-  const createTask = (e) => {
+    if(isNewTask===true){
+
+      tasksListRef.current.scrollTop = tasksListRef.current.scrollHeight;
+    }
+  }, [tasks])
+  
+  const handleSubmit = (e) => {
     e.preventDefault();
     setTask('');
     setIsNewTask(true);
-    setTasks([...tasks, {task:task, id:uuid()}]);
+    setTasks([...tasks, {id:uuid(), task}]);
   }
-  const handleEdit = (newTask, index) => {
+  const handleEdit = (updatedTask, index) => {
     const newTasks = [...tasks];
-    newTasks[index].task = newTask;
+    newTasks[index].task = updatedTask;
     setIsNewTask(false);
     setTasks(newTasks);
   }
   const handleDelete = (index) => {
-    const newTasks = tasks.filter((t,i)=>i!=index);
+    const newTasks = tasks.filter((t,i)=>i!==index);
     setIsNewTask(false);
     setTasks(newTasks);
   }
+
   return (
-    <div className="w-screen h-screen flex flex-col justify-center items-center">
-      <h3 className="text-5xl font-extrabold mb-1">Tasky</h3>
-      <div className="task-container grid grid-rows-[auto,1fr] gap-4 h-5/6 w-3/5 min-w-80 py-4 border-2 outline outline-offset-2 outline-base-content rounded-md">
-      <form onSubmit={createTask} className="join flex justify-center">
-        <input type="text" className="w-3/5 min-w-48 input input-bordered join-item text-accent-content" value={task} onChange={(e)=>setTask(e.target.value)}/>
-        <button className="join-item btn min-w-20" type="submit">Create Task</button>
-      </form>
-      <div className="tasks-container px-4 overflow-auto scroll-smooth" ref={taskListRef}>
-      <AnimatePresence>
-        {
-          tasks.map((t, index)=>{
-            return <TaskItem task={t} index={index} handleDelete={handleDelete} handleEdit={handleEdit} key={t.id}/>
-          })
-        }
-        </AnimatePresence>
-      </div>
+    <div className="flex flex-col justify-center items-center text-center font-serif h-screen w-screen">
+        <h2 className="text-5xl mb-4">React Tasky</h2>
+      <div className="grid grid-rows-[auto,auto,1fr] bg-accent-content h-5/6 w-5/6 md:w-3/5 border-2 border-accent outline outline-offset-4 outline-primary rounded-md py-4 gap-4">
+        <form onSubmit={handleSubmit} className="join flex justify-center px-6">
+          <input type="text" className="join-item input input-bordered w-3/5" value={task} onChange={(e)=>setTask(e.target.value)}/>
+          <button className="join-item btn">Create Task</button>
+        </form>
+        <div className="h-1 w-full bg-accent"></div>
+        <div className="px-4 text-start overflow-auto flex flex-col gap-2" ref={tasksListRef}>
+          <AnimatePresence>
+            {tasks && tasks.map((t,i)=>{
+              return <TaskItem key={t.id} task={t} index={i} handleEdit={handleEdit} handleDelete={handleDelete} tasksListLength={tasks.length}/>
+            })}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   )

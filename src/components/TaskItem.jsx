@@ -1,46 +1,60 @@
-import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-
-const TaskItem = ({task, index, handleDelete, handleEdit}) => {
-    const [showEdit, setShowEdit] = useState(false);
-    const [newTask, setNewTask] = useState(task);
-    const [isAlive, setIsAlive] = useState(true);
-    const inputRef = useRef();
-    useEffect(()=>{
-        if(showEdit && inputRef.current){
-            inputRef.current.focus();
-        }
-    })
-    const variants = {
-        open: {opacity: 1, y:0},
-        closed: {opactity: 0, x:'-100%'}
+import { useEffect, useRef, useState } from "react";
+const TaskItem = ({ task, index, handleEdit, handleDelete, tasksListLength }) => {
+  const [showEdit, setShowEdit] = useState(false);
+  const [updatedTask, setUpdatedTask] = useState(task.task);
+  const editInputRef = useRef();
+  useEffect(() => {
+    if (showEdit && editInputRef.current) {
+      editInputRef.current.focus();
     }
-    const handleUpdate = (e) => {
-        e.preventDefault();
-        handleEdit(newTask, index);
-        setShowEdit(false);
-    }
+  });
+  const updateTask = () => {
+    handleEdit(updatedTask, index);
+    setShowEdit(false);
+  };
   return (
-    <motion.div className="mb-2" initial={{opacity:0, y:'-50%'}} animate={isAlive?'open':'closed'} variants={variants} transition={{duration:0.3}}>
-    <div className="flex justify-between mb-1 break-words">
-        <p className="w-3/5">{index+1+`) `}{task.task}</p>
-        <div className="flex gap-2 items-baseline">
-            <button className="px-2 rounded-md bg-base-content text-accent font-bold" onClick={()=>setShowEdit(!showEdit)}>Edit</button>
-            <button className="px-2 rounded-md bg-base-content text-accent font-bold" onClick={()=>{
-                setIsAlive(false);
-                setTimeout(()=>{
-                    handleDelete(index);
-                },300)
-            }}>Dlt</button>
+    <motion.div
+      initial={{ y: "-50%", opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ x: "-100%", opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="flex justify-between">
+        <p className="max-w-48 break-words">
+          <span className="text-primary">{`${index + 1 + ") "}`}</span>
+          {task.task}
+        </p>
+        <div className="flex gap-1 items-baseline">
+          <button
+            className="px-2 bg-success text-success-content rounded-md font-bold"
+            onClick={() => setShowEdit(!showEdit)}
+          >
+            Edit
+          </button>
+          <button
+            className="px-2 bg-error text-error-content rounded-md font-bold"
+            onClick={() => handleDelete(index)}
+          >
+            Dlt
+          </button>
         </div>
-    </div>
-        {
-            showEdit && <form onSubmit={handleUpdate} className="flex justify-between">
-                <input type="text" className="border-2 border-primary bg-base-300 rounded-md w-3/5 px-2" ref={inputRef} value={newTask.task} onChange={(e)=>setNewTask(e.target.value)}/>
-                <button type="submit" className="px-2 rounded-md bg-base-content text-accent font-bold">Submit</button>
-            </form>
-        }
-        </motion.div>
-  )
-}
-export default TaskItem
+      </div>
+      {showEdit && (
+        <form onSubmit={updateTask} className={`flex justify-between mt-2 ${index===(tasksListLength-1) && 'mb-2'}`}>
+          <input
+            type="text"
+            className="max-w-48 px-2 rounded-md"
+            value={updatedTask}
+            onChange={(e) => setUpdatedTask(e.target.value)}
+            ref={editInputRef}
+          />
+          <button className="px-2 bg-accent text-accent-content rounded-md font-bold">
+            Update
+          </button>
+        </form>
+      )}
+    </motion.div>
+  );
+};
+export default TaskItem;

@@ -10,6 +10,6 @@ export default {
   plugins: [require('@tailwindcss/typography'), require('daisyui')],
   darkMode:"selector",
   daisyui:{
-    themes:['luxury']
+    themes:['night']
   }
 }
