@@ -28,13 +28,13 @@ const TaskItem = ({ task, index, handleEdit, handleDelete, tasksListLength }) =>
         <div className="flex gap-1 items-baseline">
           <button
             className="px-2 bg-success text-success-content rounded-md font-bold"
-            onClick={() => setShowEdit(!showEdit)}
+            onClick={() => setShowEdit(!showEdit)} style={{borderBottomRightRadius: 0}}
           >
             Edit
           </button>
           <button
             className="px-2 bg-error text-error-content rounded-md font-bold"
-            onClick={() => handleDelete(index)}
+            onClick={() => handleDelete(index)} style={{borderBottomRightRadius: 0}}
           >
             Dlt
           </button>
